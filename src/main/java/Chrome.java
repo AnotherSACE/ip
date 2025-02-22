@@ -1,10 +1,10 @@
-import org.w3c.dom.ls.LSOutput;
 import java.util.Scanner;
 
 public class Chrome {
 
     static String line = "____________________________________________________________";
-    static String[] toDoList = new String[100];
+    static int maxTasks = 100;
+    static Task[] toDoList = new Task[maxTasks];
     static int currentIndex = 0;
 
     public static void main(String[] args) {
@@ -18,13 +18,24 @@ public class Chrome {
         while (true) {
             Scanner sc = new Scanner(System.in);
             String input = sc.nextLine();
-            if (input.equals("bye")) {
+            String command = input.split(" ")[0];
+            if (input.equals("bye")){
                 exit();
                 break;
-            } else if (input.equals("list")) {
-                list();
-            } else {
-                add(input);
+            }
+            switch (command) {
+                case ("list"):
+                    list();
+                    break;
+                case ("mark"):
+                    mark(input);
+                    break;
+                case ("unmark"):
+                    unmark(input);
+                    break;
+                default:
+                    add(input);
+                    break;
             }
         }
     }
@@ -38,19 +49,14 @@ public class Chrome {
         System.out.println("\nBye. Hope to see you again soon!\n" + line);
     }
 
-    public static void echo(String sentence){
-        if (!sentence.equals("bye")) {
-            System.out.println(line + "\n" + sentence + "\n" + line);
-        }
-    }
-
-    public static void add(String task){
-        if (currentIndex < 100) {
+    public static void add(String description){
+        if (currentIndex < maxTasks) {
+            Task task = new Task(description);
             toDoList[currentIndex] = task;
-            System.out.println(line + "\nadded: " + task + "\n" + line);
+            System.out.println(line + "\nadded: " + task.getName() + "\n" + line);
             currentIndex++;
         } else {
-            System.out.println(line + "\nThis isn't supposed to happen\n" + line);
+            System.out.println(line + "\nYou've hit the limit on tasks!\n" + line);
         }
     }
 
@@ -58,10 +64,27 @@ public class Chrome {
         System.out.println(line);
         for(int i = 0; i < toDoList.length; i++){
             if (toDoList[i] != null) {
-                System.out.println((i + 1) + ". " + toDoList[i]);
+                String listNumber = String.valueOf(i + 1) + ". ";
+                System.out.println(listNumber + toDoList[i].toString());
             }
         }
         System.out.println(line);
+    }
+
+    public static void mark(String input){
+        String[] parts = input.split(" ");
+        int index = Integer.parseInt(parts[1]) - 1;
+        toDoList[index].setDone(true);
+        System.out.println(line + "\nNice! I've marked this task as done:\n"
+        + toDoList[index].toString() + "\n" + line);
+    }
+
+    public static void unmark(String input){
+        String[] parts = input.split(" ");
+        int index = Integer.parseInt(parts[1]) - 1;
+        toDoList[index].setDone(false);
+        System.out.println(line + "\nOK, I've marked this task as not done yet:\n"
+        + toDoList[index].toString() + "\n" + line);
     }
 
 }
