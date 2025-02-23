@@ -3,8 +3,8 @@ import java.util.Scanner;
 public class Chrome {
 
     static String line = "____________________________________________________________";
-    static int maxTasks = 100;
-    static Task[] toDoList = new Task[maxTasks];
+    static int MAX_TASKS = 100;
+    static Task[] toDoList = new Task[MAX_TASKS];
     static int currentIndex = 0;
 
     public static void main(String[] args) {
@@ -50,11 +50,15 @@ public class Chrome {
     }
 
     public static void add(String description){
-        if (currentIndex < maxTasks) {
+        if (currentIndex < MAX_TASKS) {
             Task task = new Task(description);
+            task = task.getTask();
             toDoList[currentIndex] = task;
-            System.out.println(line + "\nadded: " + task.getName() + "\n" + line);
+            System.out.println(line + "\nGot it! I've added this task: "
+                    + task + "\n");
             currentIndex++;
+            System.out.println("Now you have: " + String.valueOf(currentIndex) +
+                    " tasks in the list\n" + line);
         } else {
             System.out.println(line + "\nYou've hit the limit on tasks!\n" + line);
         }
