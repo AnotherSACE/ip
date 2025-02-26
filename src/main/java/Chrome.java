@@ -54,7 +54,7 @@ public class Chrome {
             Task task = new Task(description);
             try {
                 task = task.getTask();
-            } catch (Exception e) {
+            } catch (InvalidInputException e) {
                 System.out.println(line + "\n" + e.getMessage() + "\n" + line);
                 return;
             }
@@ -98,7 +98,7 @@ public class Chrome {
         } catch (NullPointerException e) {
             System.out.println(line + "\nTask doesn't exist!\n" + line);
             return;
-        } catch (Exception e) {
+        } catch (DoneException e) {
             System.out.println(line + "\nTask already marked as done\n" + line);
             return;
         }
@@ -120,7 +120,7 @@ public class Chrome {
         } catch (NullPointerException e) {
             System.out.println(line + "\nTask doesn't exist!\n" + line);
             return;
-        } catch (Exception e) {
+        } catch (DoneException e) {
             System.out.println(line + "\nTask already marked as undone\n" + line);
             return;
         }
