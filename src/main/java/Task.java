@@ -1,3 +1,5 @@
+import com.sun.source.util.TaskListener;
+
 public class Task {
 
     public String name;
@@ -8,7 +10,10 @@ public class Task {
         this.done = false;
     }
 
-    public void setDone(Boolean done) {
+    public void setDone(Boolean done) throws Exception {
+        if (this.done == done){
+            throw new Exception("Task already set as done");
+        }
         this.done = done;
     }
 
@@ -26,19 +31,36 @@ public class Task {
     }
 
 
-    public Task getTask() {
-        String[] parts = getName().split(" ", 2);
+    public Task getTask() throws Exception{
+        String[] parts = getName().split(" ", 2); //Cannot be empty exception
+        String details;
         String type = parts[0];
-        String details = parts[1];
+
+        if (!(type.equals("event") || type.equals("todo") || type.equals("deadline"))) {
+            throw new Exception("Sorry I have no clue what you're on about");
+        }
+        try {
+            details = parts[1];
+        } catch (ArrayIndexOutOfBoundsException e) {
+            throw new Exception("Please provide details");
+        }
 
         return switch (type) {
             case "event" -> {
                 String[] eventDetails = details.split("/", 3);
-                yield new Event(eventDetails[0].trim(), eventDetails[1].trim(), eventDetails[2].trim());
+                try {
+                    yield new Event(eventDetails[0].trim(), eventDetails[1].trim(), eventDetails[2].trim());
+                } catch (ArrayIndexOutOfBoundsException e) {
+                    throw new Exception("Please provide adequate timing");
+                }
             }
             case "deadline" -> {
                 String[] deadlineDetails = details.split("/", 2);
-                yield new Deadline(deadlineDetails[0].trim(), deadlineDetails[1].trim());
+                try {
+                    yield new Deadline(deadlineDetails[0].trim(), deadlineDetails[1].trim());
+                } catch (ArrayIndexOutOfBoundsException e) {
+                    throw new Exception("Please provide adequate timing");
+                }
             }
             default -> new ToDo(details.trim());
         };
