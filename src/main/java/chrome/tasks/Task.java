@@ -1,10 +1,11 @@
-import com.sun.jdi.InvalidTypeException;
-import com.sun.source.util.TaskListener;
-import jdk.javadoc.doclet.DocletEnvironment;
+package chrome.tasks;
+
+import chrome.exceptions.DoneException;
+import chrome.exceptions.InvalidInputException;
 
 public class Task {
 
-    public String name;
+    private final String name;
     private Boolean done;
 
     public Task(String name) {
@@ -39,7 +40,7 @@ public class Task {
         String type = parts[0];
 
         if (!(type.equals("event") || type.equals("todo") || type.equals("deadline"))) {
-            throw new InvalidInputException("Sorry I have no clue what you're on about");
+            throw new InvalidInputException("Please begin task with relevant command");
         }
         try {
             details = parts[1];

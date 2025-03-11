@@ -1,3 +1,8 @@
+package chrome.ui;
+import chrome.exceptions.DoneException;
+import chrome.exceptions.InvalidInputException;
+import chrome.tasks.Task;
+
 import java.util.Scanner;
 
 public class Chrome {

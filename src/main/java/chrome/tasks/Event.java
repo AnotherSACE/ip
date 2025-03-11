@@ -1,4 +1,6 @@
-public class Event extends Task{
+package chrome.tasks;
+
+public class Event extends Task {
 
     protected String starts;
     protected String ends;
