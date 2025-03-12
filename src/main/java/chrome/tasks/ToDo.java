@@ -1,4 +1,6 @@
-public class ToDo extends Task{
+package chrome.tasks;
+
+public class ToDo extends Task {
 
     public ToDo(String description){
         super(description);
