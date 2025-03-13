@@ -93,18 +93,8 @@ public class Chrome {
     }
 
     public static void mark(String input){
-        String[] parts = input.split(" ");
-        int index = 0;
-        try {
-            index = Integer.parseInt(parts[1]) - 1;
-            if (index < 0) {
-                throw new InvalidNumberException("Task number must start from 1");
-            }
-        } catch (NumberFormatException e) {
-                System.out.println(LINE + "\nInvalid number!\n" + LINE);
-                return;
-        } catch (InvalidNumberException e) {
-            System.out.println(LINE + "\n" + e.getMessage() + "\n" + LINE);
+        int index = indexChecker(input);
+        if (index == -1) {
             return;
         }
         try {
@@ -121,18 +111,8 @@ public class Chrome {
     }
 
     public static void unmark(String input){
-        String[] parts = input.split(" ");
-        int index = 0;
-        try {
-            index = Integer.parseInt(parts[1]) - 1;
-            if (index < 0) {
-                throw new InvalidNumberException("Task number must start from 1");
-            }
-        } catch (NumberFormatException e) {
-            System.out.println(LINE + "\nInvalid number!\n" + LINE);
-            return;
-        } catch (InvalidNumberException e) {
-            System.out.println(LINE + "\n" + e.getMessage() + "\n" + LINE);
+        int index = indexChecker(input);
+        if (index == -1) {
             return;
         }
         try {
@@ -149,21 +129,11 @@ public class Chrome {
     }
 
     public static void delete(String input){
-        String[] parts = input.split(" ");
-        int index = 0;
-        Task task = null;
-        try {
-            index = Integer.parseInt(parts[1]) - 1;
-            if (index < 0) {
-            throw new InvalidNumberException("Task number must start from 1");
-            }
-        } catch (NumberFormatException e) {
-            System.out.println(LINE + "\nInvalid number!\n" + LINE);
-            return;
-        } catch (InvalidNumberException e) {
-            System.out.println(LINE + "\n" + e.getMessage() + "\n" + LINE);
+        int index = indexChecker(input);
+        if (index == -1) {
             return;
         }
+        Task task = null;
         try {
             task = toDoList.get(index);
         } catch (IndexOutOfBoundsException e) {
@@ -180,6 +150,25 @@ public class Chrome {
         }
         System.out.println(LINE + "\nOk . I've removed this task:\n" + task.toString() +
                 "\nYou now have " + String.valueOf(count) + " task" + plural + " in the list!\n" + LINE);
+    }
+
+    public static int indexChecker(String input){
+        String[] parts = input.split(" ");
+        int index = 0;
+        Task task = null;
+        try {
+            index = Integer.parseInt(parts[1]) - 1;
+            if (index < 0) {
+                throw new InvalidNumberException("Task number must start from 1");
+            }
+            return index;
+        } catch (NumberFormatException e) {
+            System.out.println(LINE + "\nInvalid number!\n" + LINE);
+            return index = -1;
+        } catch (InvalidNumberException e) {
+            System.out.println(LINE + "\n" + e.getMessage() + "\n" + LINE);
+            return index = -1;
+        }
     }
 
 }
