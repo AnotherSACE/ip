@@ -2,15 +2,15 @@ package chrome.ui;
 import chrome.exceptions.DoneException;
 import chrome.exceptions.InvalidInputException;
 import chrome.tasks.Task;
+import java.util.ArrayList;
 
 import java.util.Scanner;
 
 public class Chrome {
 
     static String line = "____________________________________________________________";
-    static int MAX_TASKS = 100;
-    static Task[] toDoList = new Task[MAX_TASKS];
-    static int currentIndex = 0;
+    static ArrayList<Task> toDoList = new ArrayList<>();
+    static int count = 0;
 
     public static void main(String[] args) {
         String logo = " CCCC  H   H  RRRR   OOO   M   M  EEEEE \n"
@@ -55,7 +55,6 @@ public class Chrome {
     }
 
     public static void add(String description){
-        if (currentIndex < MAX_TASKS) {
             Task task = new Task(description);
             try {
                 task = task.getTask();
@@ -63,27 +62,26 @@ public class Chrome {
                 System.out.println(line + "\n" + e.getMessage() + "\n" + line);
                 return;
             }
-            toDoList[currentIndex] = task;
+            toDoList.add(task);
             System.out.println(line + "\nGot it! I've added this task: "
                     + task + "\n");
             String plural = "s";
-            if (currentIndex == 0) {
+            if (count == 0) {
                 plural = "";
             }
-            currentIndex++;
-            System.out.println("Now you have: " + String.valueOf(currentIndex) +
+            count++;
+            System.out.println("Now you have: " + String.valueOf(count) +
                     " task" + plural +" in the list\n" + line);
-        } else {
-            System.out.println(line + "\nYou've hit the limit on tasks!\n" + line);
         }
-    }
 
     public static void list(){
         System.out.println(line);
-        for(int i = 0; i < toDoList.length; i++){
-            if (toDoList[i] != null) {
-                String listNumber = String.valueOf(i + 1) + ". ";
-                System.out.println(listNumber + toDoList[i].toString());
+        int index = 1;
+        for(Task task : toDoList){
+            if (task != null) {
+                String listNumber = ". ";
+                System.out.println(index + ". " + task.toString());
+                index++;
             }
         }
         System.out.println(line);
@@ -99,7 +97,7 @@ public class Chrome {
             return;
         }
         try {
-            toDoList[index].setDone(true);
+            toDoList.get(index).setDone(true);
         } catch (NullPointerException e) {
             System.out.println(line + "\nTask doesn't exist!\n" + line);
             return;
@@ -108,7 +106,7 @@ public class Chrome {
             return;
         }
         System.out.println(line + "\nNice! I've marked this task as done:\n"
-        + toDoList[index].toString() + "\n" + line);
+        + toDoList.get(index).toString() + "\n" + line);
     }
 
     public static void unmark(String input){
@@ -121,7 +119,7 @@ public class Chrome {
             return;
         }
         try {
-            toDoList[index].setDone(false);
+            toDoList.get(index).setDone(false);
         } catch (NullPointerException e) {
             System.out.println(line + "\nTask doesn't exist!\n" + line);
             return;
@@ -130,7 +128,7 @@ public class Chrome {
             return;
         }
         System.out.println(line + "\nOK, I've marked this task as not done yet:\n"
-        + toDoList[index].toString() + "\n" + line);
+        + toDoList.get(index).toString() + "\n" + line);
     }
 
 }
