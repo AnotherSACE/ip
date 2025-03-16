@@ -4,36 +4,42 @@ import chrome.exceptions.DoneException;
 import chrome.exceptions.InvalidInputException;
 import chrome.exceptions.InvalidNumberException;
 import chrome.tasks.Task;
-import static chrome.Chrome.*;
+import java.util.ArrayList;
 
 public class TaskList {
 
-    public static void add(String description) {
+    private final ArrayList<Task> tasks;
+    private static final String LINE = "____________________________________________________________";
+
+    public TaskList(ArrayList<Task> tasks) {
+        this.tasks = tasks;
+    }
+
+    public void add(String description) {
         Task task = new Task(description);
+
         try {
             task = task.getTask();
         } catch (InvalidInputException e) {
             System.out.println(LINE + "\n" + e.getMessage() + "\n" + LINE);
             return;
         }
-        toDoList.add(task);
+
+        tasks.add(task);
         System.out.println(LINE + "\nGot it! I've added this task: "
                 + task + "\n");
-        String plural;
-        if (count == 0) {
-            plural = "";
-        } else {
-            plural = "s";
-        }
-        count++;
+
+        int count = tasks.size();
+        String plural = (count == 1) ? "" : "s";
+
         System.out.println("Now you have: " + String.valueOf(count) +
                 " task" + plural + " in the list\n" + LINE);
     }
 
-    public static void list() {
+    public void list() {
         System.out.println(LINE);
         int index = 1;
-        for (Task task : toDoList) {
+        for (Task task : tasks) {
             if (task != null) {
                 System.out.println(index + ". " + task.toString());
                 index++;
@@ -42,7 +48,7 @@ public class TaskList {
         System.out.println(LINE);
     }
 
-    public static void mark(String input) {
+    public void mark(String input) {
         Task task = taskGetter(input);
         if (task == null) {
             return;
@@ -58,7 +64,7 @@ public class TaskList {
                 + task.toString() + "\n" + LINE);
     }
 
-    public static void unmark(String input) {
+    public void unmark(String input) {
         Task task = taskGetter(input);
         if (task == null) {
             return;
@@ -73,21 +79,21 @@ public class TaskList {
                 + task.toString() + "\n" + LINE);
     }
 
-    public static void delete(String input) {
+    public void delete(String input) {
         Task task = taskGetter(input);
         if (task == null) {
             return;
         }
 
-        toDoList.remove(task);
-        count--;
+        tasks.remove(task);
 
+        int count = tasks.size();
         String plural = (count == 1) ? "" : "s";
         System.out.println(LINE + "\nOk . I've removed this task:\n" + task.toString() +
                 "\nYou now have " + String.valueOf(count) + " task" + plural + " in the list!\n" + LINE);
     }
 
-    public static Task taskGetter(String input) {
+    public Task taskGetter(String input) {
         int index;
         Task task;
         String[] parts = input.split(" ");
@@ -106,7 +112,7 @@ public class TaskList {
         }
 
         try {
-            task = toDoList.get(index);
+            task = tasks.get(index);
             return task;
         } catch (IndexOutOfBoundsException e) {
             System.out.println(LINE + "\nTask doesn't exist!\n" + LINE);

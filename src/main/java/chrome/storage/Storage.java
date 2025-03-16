@@ -12,13 +12,21 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Scanner;
-import static chrome.Chrome.*;
 
 public class Storage {
+    private final ArrayList<Task> toDoList;
+    private final String filePath;
+    private static final String LINE = "____________________________________________________________";
 
-    public static void load() {
-        Path path = Paths.get(PATH);
+    public Storage(String filePath) {
+        this.toDoList = new ArrayList<>();
+        this.filePath = filePath;
+    }
+
+    public void load() {
+        Path path = Paths.get(filePath);
         File file = new File(path.toString());
 
         try {
@@ -45,18 +53,17 @@ public class Storage {
             return;
         }
         System.out.println(LINE + "\nChrome.txt loaded successfully!\n" + LINE);
-        count = toDoList.size();
     }
 
-    public static void save()  {
-        try (FileWriter overWrite = new FileWriter(PATH)){
+    public void save()  {
+        try (FileWriter overWrite = new FileWriter(filePath)){
             for (Task task : toDoList) {
                 overWrite.write(task.toFileFormat() + System.lineSeparator());
             }
         } catch (IOException e) {
             System.out.println(LINE + "\nCould not save file!\n" + LINE);
         }
-        System.out.println(LINE + "\nSaved to " + PATH + "\n" + LINE);
+        System.out.println(LINE + "\nSaved to " + filePath + "\n" + LINE);
     }
 
     private static Task toTask(String line) throws CorruptedFileException {
@@ -86,34 +93,33 @@ public class Storage {
                     String deadlineName = info[0];
                     String time = info[1];
                     task = new Deadline(deadlineName, time);
+                    break;
 
-                    if (details.charAt(4) == 'X') {
-                        task.setDone(true);
-                    }
-                    return task;
                 case ("E"):
                     String[] information = parts[1].split("/");
                     String name =  information[0];
                     String start = information[1];
                     String end = information[2];
                     task = new Event(name, start, end);
+                    break;
 
-                    if (details.charAt(4) == 'X') {
-                        task.setDone(true);
-                    }
-                    return task;
                 default:
                     task = new ToDo(description);
-                    if (details.charAt(4) == 'X') {
-                        task.setDone(true);
-                    }
-                    return task;
+                    break;
             }
+            if (details.charAt(4) == 'X') {
+                task.setDone(true);
+            }
+            return task;
         } catch (IndexOutOfBoundsException | NullPointerException e) {
             throw new CorruptedFileException();
         } catch (DoneException ignored) {
             return task;
         }
+    }
+
+    public ArrayList<Task> getTasks() {
+        return toDoList;
     }
 
 

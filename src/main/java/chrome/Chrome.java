@@ -1,22 +1,25 @@
 package chrome;
+import chrome.tasklist.TaskList;
 import chrome.tasks.*;
-import java.util.ArrayList;
 import chrome.storage.Storage;
 import chrome.parser.Parser;
-
 import chrome.ui.Ui;
+import java.util.ArrayList;
 
 public class Chrome {
+    private final Storage storage;
+    private final Parser parser;
+    private final Ui ui;
 
-    public static final String LINE = "____________________________________________________________";
-    public static ArrayList<Task> toDoList = new ArrayList<>();
-    public static int count = 0;
-    public static final String PATH = "./data/chrome.txt";
-    public static boolean running = true;
+    public Chrome() {
+        this.storage = new Storage("./data/chrome.txt");
+        ArrayList<Task> toDoList = storage.getTasks();
+        this.ui = new Ui();
+        this.parser = new Parser(new TaskList(toDoList), storage, ui);
+    }
 
-
-    public static void main(String[] args) {
-        Storage.load();
+    public void run() {
+        storage.load();
         String logo = """
                  CCCC  H   H  RRRR   OOO   M   M  EEEEE\s
                 C      H   H  R   R O   O  MM MM  E    \s
@@ -25,9 +28,14 @@ public class Chrome {
                  CCCC  H   H  R   R  OOO   M   M  EEEEE\s
                 """;
         System.out.println("Welcome to\n\n" + logo);
-        Ui.greet();
-        while (running) {
-            Parser.run();
+        ui.greet();
+        while (!parser.shouldExit()) {
+            parser.run();
         }
+    }
+
+    public static void main(String[] args) {
+        Chrome chrome = new Chrome();
+        chrome.run();
     }
 }
