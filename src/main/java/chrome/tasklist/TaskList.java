@@ -4,6 +4,8 @@ import chrome.exceptions.DoneException;
 import chrome.exceptions.InvalidInputException;
 import chrome.exceptions.InvalidNumberException;
 import chrome.tasks.Task;
+import org.w3c.dom.ls.LSOutput;
+
 import java.util.ArrayList;
 
 public class TaskList {
@@ -91,6 +93,17 @@ public class TaskList {
         String plural = (count == 1) ? "" : "s";
         System.out.println(LINE + "\nOk . I've removed this task:\n" + task.toString() +
                 "\nYou now have " + String.valueOf(count) + " task" + plural + " in the list!\n" + LINE);
+    }
+
+    public void find(String input) {
+        String keyword = input.substring(5);
+        System.out.println("Here are the results for: " + keyword);
+        for (Task task : tasks) {
+            if (task.toString().contains(keyword)){
+                System.out.println(task.toString());
+            }
+        }
+        System.out.println(LINE);
     }
 
     public Task taskGetter(String input) {

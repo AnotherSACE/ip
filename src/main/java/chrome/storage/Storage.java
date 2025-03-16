@@ -35,10 +35,10 @@ public class Storage {
                         "Creating Chrome.txt...\n" + LINE);
                 Files.createDirectories(path.getParent());
                 Files.createFile(path);
-                System.out.println(LINE + "\nChrome.txt created!\n" + LINE);
+                System.out.println("\nChrome.txt created!\n" + LINE);
             }
             Scanner fileScan = new Scanner(file);
-            System.out.println(LINE + "\nLoading Chrome.txt...\n" + LINE);
+            System.out.println(LINE + "\nLoading Chrome.txt...");
             while (fileScan.hasNext()) {
                 String line = fileScan.nextLine();
                 try {
