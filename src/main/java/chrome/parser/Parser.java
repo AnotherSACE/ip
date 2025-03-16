@@ -28,6 +28,7 @@ public class Parser {
             case ("unmark") -> taskList.unmark(input);
             case ("delete") -> taskList.delete(input);
             case ("save") -> storage.save();
+            case ("find") -> taskList.find(input);
             case("bye") -> {
                 ui.exit();
                 shouldExit = true;
