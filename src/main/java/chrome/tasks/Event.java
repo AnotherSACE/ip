@@ -15,4 +15,9 @@ public class Event extends Task {
     public String toString() {
         return "[E]" + super.toString() + " (from: " + starts + " to: " + ends + ")";
     }
+
+    @Override
+    public String toFileFormat(){
+        return "[E]" + super.toFileFormat() + "/" + starts + "/" + ends;
+    }
 }

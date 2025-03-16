@@ -69,4 +69,11 @@ public class Task {
         };
     }
 
+    public String toFileFormat(){
+        if (!done) {
+            return "[-] " + name;
+        } else {
+            return "[X] " + name;
+        }
+    }
 }
