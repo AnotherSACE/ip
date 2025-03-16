@@ -4,19 +4,36 @@ import chrome.exceptions.DoneException;
 import chrome.exceptions.InvalidInputException;
 import chrome.exceptions.InvalidNumberException;
 import chrome.tasks.Task;
-import org.w3c.dom.ls.LSOutput;
-
 import java.util.ArrayList;
 
+/**
+ * The TaskList class manages a list of tasks, providing methods to add, mark, unmark, delete, list,
+ * and search for tasks. It handles task creation, user interaction, and task manipulation operations.
+ * It is used to manage a collection of Task objects by adding and deleting tasks, marking tasks as done
+ * or undone, listing all tasks, and finding tasks by keyword.
+ */
 public class TaskList {
 
     private final ArrayList<Task> tasks;
     private static final String LINE = "____________________________________________________________";
 
+    /**
+     * Constructor for the TaskList class.
+     * Initializes the task list with an existing list of tasks.
+     *
+     * @param tasks The list of tasks to initialize the TaskList with.
+     */
     public TaskList(ArrayList<Task> tasks) {
         this.tasks = tasks;
     }
 
+    /**
+     * Adds a new task with the specified description to the task list.
+     * If the task is valid, it is added to the list, and the user is notified.
+     * If the task description is invalid, an error message is shown.
+     *
+     * @param description The description of the task to be added.
+     */
     public void add(String description) {
         Task task = new Task(description);
 
@@ -34,24 +51,34 @@ public class TaskList {
         int count = tasks.size();
         String plural = (count == 1) ? "" : "s";
 
-        System.out.println("Now you have: " + String.valueOf(count) +
+        System.out.println("Now you have: " + (count) +
                 " task" + plural + " in the list\n" + LINE);
     }
 
+    /**
+     * Lists all tasks currently in the task list.
+     * Displays each task with an index and prints the task details.
+     */
     public void list() {
         System.out.println(LINE);
         int index = 1;
         for (Task task : tasks) {
             if (task != null) {
-                System.out.println(index + ". " + task.toString());
+                System.out.println(index + ". " + task);
                 index++;
             }
         }
         System.out.println(LINE);
     }
 
-    public void mark(String input) {
-        Task task = taskGetter(input);
+    /**
+     * Marks a specific task as done.
+     * If the task is already marked as done, a message is shown to the user.
+     *
+     * @param number The task number to be marked as done.
+     */
+    public void mark(String number) {
+        Task task = taskGetter(number);
         if (task == null) {
             return;
         }
@@ -63,11 +90,17 @@ public class TaskList {
             return;
         }
         System.out.println(LINE + "\nNice! I've marked this task as done:\n"
-                + task.toString() + "\n" + LINE);
+                + task + "\n" + LINE);
     }
 
-    public void unmark(String input) {
-        Task task = taskGetter(input);
+    /**
+     * Marks a specific task as undone.
+     * If the task is already marked as undone, a message is shown to the user.
+     *
+     * @param number The task number to be marked as undone.
+     */
+    public void unmark(String number) {
+        Task task = taskGetter(number);
         if (task == null) {
             return;
         }
@@ -78,11 +111,17 @@ public class TaskList {
             return;
         }
         System.out.println(LINE + "\nOK, I've marked this task as not done yet:\n"
-                + task.toString() + "\n" + LINE);
+                + task + "\n" + LINE);
     }
 
-    public void delete(String input) {
-        Task task = taskGetter(input);
+     /**
+     * Deletes a specific task from the list.
+     * If the task does not exist, a message is shown to the user.
+     *
+     * @param number The task number to be deleted.
+     */
+    public void delete(String number) {
+        Task task = taskGetter(number);
         if (task == null) {
             return;
         }
@@ -91,21 +130,35 @@ public class TaskList {
 
         int count = tasks.size();
         String plural = (count == 1) ? "" : "s";
-        System.out.println(LINE + "\nOk . I've removed this task:\n" + task.toString() +
-                "\nYou now have " + String.valueOf(count) + " task" + plural + " in the list!\n" + LINE);
+        System.out.println(LINE + "\nOk . I've removed this task:\n" + task +
+                "\nYou now have " + count + " task" + plural + " in the list!\n" + LINE);
     }
 
+
+    /**
+     * Finds and displays tasks that contain the given keyword in their description.
+     * This method searches through all tasks in the list and prints matching tasks.
+     *
+     * @param input The input containing the keyword to search for (e.g., "find book").
+     */
     public void find(String input) {
         String keyword = input.substring(5);
         System.out.println("Here are the results for: " + keyword);
         for (Task task : tasks) {
             if (task.toString().contains(keyword)){
-                System.out.println(task.toString());
+                System.out.println(task);
             }
         }
         System.out.println(LINE);
     }
 
+    /**
+     * Retrieves a task based on the given input (task number).
+     * Converts the input into an index and checks for validity (e.g., non-negative, integer).
+     *
+     * @param input The input containing the task number.
+     * @return The Task object if valid, or null if the task does not exist.
+     */
     public Task taskGetter(String input) {
         int index;
         Task task;

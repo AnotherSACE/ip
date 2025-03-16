@@ -15,16 +15,35 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+
+/**
+ * The Storage class handles loading and saving tasks to a file.
+ * It reads tasks from a file, parses them into Task objects,
+ * and stores them in a list. It also saves the list of tasks
+ * back to the file in a specific format.
+ */
 public class Storage {
     private final ArrayList<Task> toDoList;
     private final String filePath;
     private static final String LINE = "____________________________________________________________";
 
+    /**
+     * Constructor for the Storage class.
+     * Initializes the task list and the file path where the tasks will be stored.
+     *
+     * @param filePath The path of the file where the tasks are saved.
+     */
     public Storage(String filePath) {
         this.toDoList = new ArrayList<>();
         this.filePath = filePath;
     }
 
+    /**
+     * Loads tasks from the file and adds them to the task list.
+     * If the file does not exist, it will create a new file.
+     * The tasks are added to the list as Task Objects,
+     * with error handling for corrupted files.
+     */
     public void load() {
         Path path = Paths.get(filePath);
         File file = new File(path.toString());
@@ -37,6 +56,7 @@ public class Storage {
                 Files.createFile(path);
                 System.out.println("\nChrome.txt created!\n" + LINE);
             }
+
             Scanner fileScan = new Scanner(file);
             System.out.println(LINE + "\nLoading Chrome.txt...");
             while (fileScan.hasNext()) {
@@ -55,6 +75,9 @@ public class Storage {
         System.out.println(LINE + "\nChrome.txt loaded successfully!\n" + LINE);
     }
 
+    /**
+     * Saves the current list of tasks to the file.
+     */
     public void save()  {
         try (FileWriter overWrite = new FileWriter(filePath)){
             for (Task task : toDoList) {
@@ -65,6 +88,7 @@ public class Storage {
         }
         System.out.println(LINE + "\nSaved to " + filePath + "\n" + LINE);
     }
+
 
     private static Task toTask(String line) throws CorruptedFileException {
         Task task = null;
@@ -113,11 +137,16 @@ public class Storage {
             return task;
         } catch (IndexOutOfBoundsException | NullPointerException e) {
             throw new CorruptedFileException();
-        } catch (DoneException ignored) {
+        } catch (DoneException ignored) { // Mark method requires DoneException implementation which is irrelevant here
             return task;
         }
     }
 
+    /**
+     * Getter method for the list of tasks.
+     *
+     * @return The list of tasks in the storage.
+     */
     public ArrayList<Task> getTasks() {
         return toDoList;
     }
