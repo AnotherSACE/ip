@@ -6,9 +6,6 @@ import java.io.IOException;
 import java.io.File;
 import java.util.ArrayList;
 import java.io.FileWriter;
-
-
-
 import java.util.Scanner;
 
 public class Chrome {
@@ -181,21 +178,28 @@ public class Chrome {
 
         try {
             if (!Files.exists(path)) {
+                System.out.println(LINE + "\nChrome.txt not found.\n" +
+                        "Creating Chrome.txt...\n" + LINE);
                 Files.createDirectories(path.getParent());
                 Files.createFile(path);
+                System.out.println(LINE + "\nChrome.txt created!\n" + LINE);
             }
             Scanner fileScan = new Scanner(file);
+            System.out.println(LINE + "\nLoading Chrome.txt...\n" + LINE);
             while (fileScan.hasNext()) {
                 String line = fileScan.nextLine();
                 try {
                     toDoList.add(toTask(line));
                 } catch (CorruptedFileException e) {
                     System.out.println(LINE + "\nFile corrupted\n" + LINE);
+                    return;
                 }
             }
         } catch (IOException ignored) {
             System.out.println(LINE + "\nCould not load file!\n" + LINE);
+            return;
         }
+        System.out.println(LINE + "\nChrome.txt loaded successfully!\n" + LINE);
         count = toDoList.size();
     }
 
@@ -207,14 +211,15 @@ public class Chrome {
         } catch (IOException e) {
             System.out.println(LINE + "\nCould not save file!\n" + LINE);
         }
+        System.out.println(LINE + "\nSaved to " + PATH + "\n" + LINE);
     }
 
     private static Task toTask(String line) throws CorruptedFileException {
         Task task = null;
-        String[] parts = null;
-        String description = null;
-        String type = null;
-        String details = null;
+        String[] parts;
+        String description;
+        String type;
+        String details;
 
         try {
             parts = line.split(" ");
@@ -232,27 +237,29 @@ public class Chrome {
         try {
             switch (type) {
                 case ("D"):
-                    String time = parts[2];
-                    time = time.substring(1);
-                    task = new Deadline(description, time);
+                    String[] info = description.split("/");
+                    String deadlineName = info[0];
+                    String time = info[1];
+                    task = new Deadline(deadlineName, time);
 
-                    if (details.charAt(5) == 'X') {
+                    if (details.charAt(4) == 'X') {
                         task.setDone(true);
                     }
                     return task;
                 case ("E"):
-                    String[] times = parts[2].split("/");
-                    String start = times[0];
-                    String end = times[1];
+                    String[] information = parts[1].split("/");
+                    String name =  information[0];
+                    String start = information[1];
+                    String end = information[2];
+                    task = new Event(name, start, end);
 
-                    task = new Event(description, start, end);
-                    if (details.charAt(5) == 'X') {
+                    if (details.charAt(4) == 'X') {
                         task.setDone(true);
                     }
                     return task;
                 default:
                     task = new ToDo(description);
-                    if (details.charAt(5) == 'X') {
+                    if (details.charAt(4) == 'X') {
                         task.setDone(true);
                     }
                     return task;
