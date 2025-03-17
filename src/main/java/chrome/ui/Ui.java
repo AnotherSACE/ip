@@ -16,7 +16,7 @@ public class Ui {
     }
 
     /**
-     * Prints a goodbye message when the user exits the program.
+     * Prints a farewell message when the user exits the program.
      */
     public void exit() {
         System.out.println(LINE + "\nHave a nice day!\n" + LINE);
